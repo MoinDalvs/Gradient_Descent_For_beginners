@@ -1,5 +1,8 @@
 # Gradient_descent_Complete_In_Depth_for beginners
 
+### `Read and catch up on content:`
+- [Deep Learning article](https://github.com/MoinDalvs/Neural_Networks_From_Scratch/blob/main/README.md) :books:
+
 ## 0.1 Table of Contents<a class="anchor" id="0.1"></a>
 1. [Let's talk about Differential Derivative and Partial Derivative](#1)
     - 1.1 [What is Differential?](#1.1)
