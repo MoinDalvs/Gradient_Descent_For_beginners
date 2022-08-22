@@ -1,0 +1,2 @@
+# Gradient_Descent_For_beginners
+Gradient_descent_Complete_In_Depth_for beginners
