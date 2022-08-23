@@ -105,7 +105,77 @@ The slight difference between the loss fucntion and the cost function is about t
 
 + Gradient descent is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function.Gradient descent is an optimization algorithm used to optimize neural networks and many other machine learning algorithms. Our main goal in optimization is to find the local minima, and gradient descent helps us to take repeated steps in the direction opposite of the gradient of the function at the current point. This method is commonly used in machine learning (ML) and deep learning (DL) to minimize a cost/loss function
 
++ **`Mean Squared Error`**
++ The Mean Squared Error (MSE) is perhaps the simplest and most common loss function, often taught in introductory Machine Learning courses. To calculate the MSE, you take the difference between your model’s predictions and the ground truth, square it, and average it out across the whole dataset.
+
+The MSE will never be negative, since we are always squaring the errors. The MSE is formally defined by the following equation:
+
+![image](https://user-images.githubusercontent.com/99672298/186230924-9597c187-b6ea-42b0-9071-e0ee2fbf38a4.png)
+
+Where N is the number of samples we are testing against.
+
+![image](https://user-images.githubusercontent.com/99672298/186230986-1a796c76-15f4-4bc9-a4d8-487ae0bfa425.png)
+
+![17 08 2022_19 31 44_REC](https://user-images.githubusercontent.com/99672298/186230025-9aa1e21c-e2b3-466a-ad6d-b4e27f68cb35.png)
+
+Advantage: The MSE is great for ensuring that our trained model has no outlier predictions with huge errors, since the MSE puts larger weight on theses errors due to the squaring part of the function.
+
+Disadvantage: If our model makes a single very bad prediction, the squaring part of the function magnifies the error. Yet in many practical cases we don’t care much about these outliers and are aiming for more of a well-rounded model that performs good enough on the majority.
+
++ **`Absolute Error loss`**
+
+The Mean Absolute Error (MAE) is only slightly different in definition from the MSE, but interestingly provides almost exactly opposite properties! To calculate the MAE, you take the difference between your model’s predictions and the ground truth, apply the absolute value to that difference, and then average it out across the whole dataset.
+
+The MAE, like the MSE, will never be negative since in this case we are always taking the absolute value of the errors. The MAE is formally defined by the following equation:
+
+![image](https://user-images.githubusercontent.com/99672298/186231183-38e3ce23-81c0-4aa1-9288-293cfdf7fada.png)
+![image](https://user-images.githubusercontent.com/99672298/186231224-60e02b0c-5d6b-4a96-8060-7a4bca963c9b.png)
+![17 08 2022_20 09 47_REC](https://user-images.githubusercontent.com/99672298/186230150-93a80714-bb2f-47bb-899a-b497c49fda2c.png)
+![17 08 2022_21 43 06_REC](https://user-images.githubusercontent.com/99672298/186230261-51f220ff-b1a6-4bcc-a453-08d1a9b0ee71.png)
+
+Advantage: The beauty of the MAE is that its advantage directly covers the MSE disadvantage. Since we are taking the absolute value, all of the errors will be weighted on the same linear scale. Thus, unlike the MSE, we won’t be putting too much weight on our outliers and our loss function provides a generic and even measure of how well our model is performing.
+
+Disadvantage: If we do in fact care about the outlier predictions of our model, then the MAE won’t be as effective. The large errors coming from the outliers end up being weighted the exact same as lower errors. This might results in our model being great most of the time, but making a few very poor predictions every so-often.
+
++ **`Huber Loss`**
+
+Now we know that the MSE is great for learning outliers while the MAE is great for ignoring them. But what about something in the middle?
+
+Consider an example where we have a dataset of 100 values we would like our model to be trained to predict. Out of all that data, 25% of the expected values are 5 while the other 75% are 10.
+
+An MSE loss wouldn’t quite do the trick, since we don’t really have “outliers”; 25% is by no means a small fraction. On the other hand we don’t necessarily want to weight that 25% too low with an MAE. Those values of 5 aren’t close to the median (10 — since 75% of the points have a value of 10), but they’re also not really outliers.
+
+Our solution?
+
+The Huber Loss Function.
+
+The Huber Loss offers the best of both worlds by balancing the MSE and MAE together. We can define it using the following piecewise function:
+
+![image](https://user-images.githubusercontent.com/99672298/186231537-ee7e5aa3-377a-4e9a-8e8e-241a21b4f9d7.png)
+
+**`What this equation essentially says is: for loss values less than delta, use the MSE; for loss values greater than delta, use the MAE.`** This effectively combines the best of both worlds from the two loss functions!
+
+Using the MAE for larger loss values mitigates the weight that we put on outliers so that we still get a well-rounded model. At the same time we use the MSE for the smaller loss values to maintain a quadratic function near the centre.
+
+This has the effect of magnifying the loss values as long as they are greater than 1. Once the loss for those data points dips below 1, the quadratic function down-weights them to focus the training on the higher-error data points.
+
+![17 08 2022_21 42 39_REC](https://user-images.githubusercontent.com/99672298/186230181-f7267037-7561-48c6-83f6-4234c9da9470.png)
+
+
++ **`Cross Entropy`**
+
+![17 08 2022_21 51 22_REC](https://user-images.githubusercontent.com/99672298/186230361-09ceb50b-7032-4af3-9338-bd51e98f27e4.png)
+
++ **`Multi-Class Cross Entropy`**
+
+![17 08 2022_21 57 18_REC](https://user-images.githubusercontent.com/99672298/186230519-5af07bb8-34f5-4fa7-96d5-ee1b06f10010.png)
+![18 08 2022_10 52 46_REC](https://user-images.githubusercontent.com/99672298/186230575-85ec562c-fb9d-4ad7-9197-567d6725c39f.png)
+![18 08 2022_11 18 57_REC](https://user-images.githubusercontent.com/99672298/186230590-6a9f100b-41c1-47ac-a1df-a27e551226fe.png)
+![18 08 2022_11 20 51_REC](https://user-images.githubusercontent.com/99672298/186230630-14021cdd-f7ff-4a72-8de4-dc020a9ff350.png)
+
 #### 2.2 A) The difference between the Loss Function and the Cost Function<a class="anchor" id="2.2A"></a>
+
+![17 08 2022_15 54 58_REC](https://user-images.githubusercontent.com/99672298/186229903-293fe2e5-34c4-430a-b24a-5ba8bc63f3c2.png)
 
 #### Loss Functions
 The loss function quantifies how much a model \boldsymbol{f}‘s prediction \boldsymbol{\hat{y} \equiv f(\mathbf{x})} deviates from the ground truth \boldsymbol{y \equiv y(\mathbf{x})} for one particular object \mathbf{x}. So, when we calculate loss, we do it for a single object in the training or test sets.
@@ -145,6 +215,9 @@ But, nothing stops us from using the median, the summary statistic less sensitiv
 The cost functions serve two purposes. First, its value for the test data estimates our model’s performance on unseen objects. That allows us to compare different models and choose the best. Second, we use it to train our models.
 
 ![Filter_Method](https://editor.analyticsvidhya.com/uploads/25665ezgif.com-gif-maker.gif)
+
+![17 08 2022_19 27 56_REC](https://user-images.githubusercontent.com/99672298/186229944-393a5f83-f42b-43de-9617-9d81ca4d2857.png)
+
 
 ### 2.3 Linear Regression using Gradient Descent<a class="anchor" id="2.3"></a>
 ___
