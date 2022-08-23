@@ -285,6 +285,19 @@ Typical non-differentiable functions have a step a jump a cusp discontinuity of 
 
 + **Next requirement — function has to be convex.**
 
+![16 08 2022_11 50 49_REC](https://user-images.githubusercontent.com/99672298/186215840-4fe72b64-c559-45f0-964e-f08140590844.png)
+
+#### Convex Functions
+Geometrically, a function is convex if a line segment drawn from any point (x, f(x)) to another point (y, f(y)) -- called the chord from x to y -- lies on or above the graph of f, as in the picture below:
+
+![image](https://user-images.githubusercontent.com/99672298/186218026-3fb092bd-4cad-4602-b85c-11c291e4712e.png)
+
+Algebraically, f is convex if, for any x and y, and any t between 0 and 1, f( tx + (1-t)y ) <= t f(x) + (1-t) f(y).  A function is concave if -f is convex -- i.e. if the chord from x to y lies on or below the graph of f.  It is easy to see that every linear function -- whose graph is a straight line -- is both convex and concave.
+
+#### A non-convex function "curves up and down" -- it is neither convex nor concave.  A familiar example is the sine function:
+
+![image](https://user-images.githubusercontent.com/99672298/186218097-c413106c-7826-4b27-ac71-93f9586a064e.png)
+
 ![image](https://user-images.githubusercontent.com/99672298/181440345-5e8a10c9-0bd0-419f-8fb2-556d5c151384.png)
 
 If the data is arranges in a way that it poses a non-convex optimization problem. It is very difficult to perform optimization problem. It is very difficult to perform
@@ -391,6 +404,16 @@ Advantages of Mini Batch gradient descent:
 ![28 06 2022_22 45 47_REC](https://user-images.githubusercontent.com/99672298/181740448-fa7de855-4ed7-4e9a-9f42-61e319c3f3e9.png)
 ![28 06 2022_23 19 49_REC](https://user-images.githubusercontent.com/99672298/181740549-16bbb914-d89d-4c5d-91df-d35a9bb55c8b.png)
 
+#### Drawbacks of base optimizer:(GD, SGD, mini-batch GD)
+
++ **Gradient Descent uses the whole training data to update weight and bias. Suppose if we have millions of records then training becomes slow and computationally very expensive.**
++ **SGD solved the Gradient Descent problem by using only single records to updates parameters. But, still, SGD is slow to converge because it needs forward and backward propagation for every record. And the path to reach global minima becomes very noisy.**
++ **Mini-batch GD overcomes the SDG drawbacks by using a batch of records to update the parameter. Since it doesn't use entire records to update parameter, the path to reach global minima is not as smooth as Gradient Descent.**
+
+![image](https://user-images.githubusercontent.com/99672298/186222534-d6e0977d-15a3-40ed-8865-0d847dbb7439.png)
+
+The above figure is the plot between the number of epoch on the x-axis and the loss on the y-axis. We can clearly see that in Gradient Descent the loss is reduced smoothly whereas in SGD there is a high oscillation in loss value.
+
 [Table of Content](#0.1)
 
 ### 2.8 Variants of Gradient Descent Algorithm<a class="anchor" id="2.8"></a>
@@ -487,11 +510,37 @@ Momentum is an extension to the gradient descent optimization algorithm, often r
 Now, Imagine you have a ball rolling from point A. The ball starts rolling down slowly and gathers some momentum across the slope AB. When the ball reaches point B, it has accumulated enough momentum to push itself across the plateau region B and finally following slope BC to land at the global minima C.
 
 #### How can this be used and applied to Gradient Descent?
-We can use a moving average over the past gradients. In regions where the gradient is high like AB, weight updates will be large. Thus, in a way we are gathering momentum by taking a moving average over these gradients.
+We can use a moving average over the past gradients, it also helps reduce the noise in each iteration using Momentum on top of the Gradient Descent. In regions where the gradient is high like AB, weight updates will be large. Thus, in a way we are gathering momentum by taking a moving average over these gradients.
+
+### SGD with momentum
+It always works better than the normal Stochastic Gradient Descent Algorithm. The problem with SGD is that while it tries to reach minima because of the high oscillation we can’t increase the learning rate. So it takes time to converge. In this algorithm, we will be using Exponentially Weighted Averages to compute Gradient and used this Gradient to update parameter.
+
++ An equation to update weights and bias in SGD
+
+![image](https://user-images.githubusercontent.com/99672298/186223548-f44fa28e-168c-4e50-a883-c711b3497596.png)
+
++ An equation to update weights and bias in SGD with momentum
+
+![image](https://user-images.githubusercontent.com/99672298/186223648-2c0d9fb4-9d5c-4d4d-998d-d025319d04d9.png)
 
 But there is a problem with this method, it considers all the gradients over iterations with equal weightage. The gradient at t=0 has equal weightage as that of the gradient at current iteration t. We need to use some sort of weighted average of the past gradients such that the recent gradients are given more weightage.
 
 This can be done by using an Exponential Moving Average(EMA). An exponential moving average is a moving average that assigns a greater weight on the most recent values.
+
+#### **`Exponentially Weighted Averages`** is used in sequential noisy data to reduce the noise and smoothen the data. To denoise the data, we can use the following equation to generate a new sequence of data with less noise.
+
+![image](https://user-images.githubusercontent.com/99672298/186223800-cd957a3a-c4db-4513-9f7b-51cee2df5bf5.png)
+![image](https://user-images.githubusercontent.com/99672298/186223923-b4997e75-f0b5-4a8b-89c5-a529c9726b72.png)
+
+Now, let’s see how the new sequence is generated using the above equation: For our example to make it simple, let’s consider a sequence of size 3.
+
+![image](https://user-images.githubusercontent.com/99672298/186224028-cdb0658a-622b-460f-8c2d-0539a4aed90a.png)
+
+Let’s expand V3 equation:
+
+![image](https://user-images.githubusercontent.com/99672298/186224075-58fe6497-3e7d-467a-886f-b20aa105ac2c.png)
+
+From the above equation, at time step t=3 more weightage is given to a3(which is the latest generated data) then followed by a2 previously generated data, and so on. This is how the sequence of noisy data is smoothened. It works better in a long sequence because, in the initial period, the averaging effect is less due to fewer data points.
 
 **`Momentum can be interpreted as a ball rolling down a nearly horizontal incline. The ball naturally gathers momentum as gravity causes it to accelerate.`**
 
@@ -521,6 +570,27 @@ This has the effect of harnessing the accelerating benefits of momentum whilst a
 ___
 
 A problem with the gradient descent algorithm is that the step size (learning rate) is the same for each variable or dimension in the search space. It is possible that better performance can be achieved using a step size that is tailored to each variable, allowing larger movements in dimensions with a consistently steep gradient and smaller movements in dimensions with less steep gradients.
+
+The idea behind Adagrad is to use different learning rates for each parameter base on iteration. The reason behind the need for different learning rates is that the learning rate for sparse features parameters needs to be higher compare to the dense features parameter because the frequency of occurrence of sparse features is lower.
+
+Equation:
+
+![image](https://user-images.githubusercontent.com/99672298/186224327-345708cd-3bc6-446f-a7a2-d2d1dab9802e.png)
+
+In the above Adagrad optimizer equation, the learning rate has been modified in such a way that it will automatically decrease because the summation of the previous gradient square will always keep on increasing after every time step.
+Now, let’s take a simple example to check how the learning rate is different for every parameter in a single time step. For this example, we will consider a single neuron with 2 inputs and 1 output. So, the total number of parameters will be 3 including bias.
+
+![image](https://user-images.githubusercontent.com/99672298/186224603-fc766200-b779-4e17-a005-3fd55647e80a.png)
+
+The above computation is done at a single time step, where all the three parameters learning rate “η” is divided by the square root of “α” which is different for all parameters. So, we can see that the learning rate is different for all three parameters.
+
+Now, let’s see how weights and bias are updated in Stochastic Gradient Descent.
+
+![image](https://user-images.githubusercontent.com/99672298/186224673-289666c2-b8b6-4d47-b812-fd457db0ff82.png)
+
+Similarly, the above computation is done at a single time step, and here the learning rate “η” remains the same for all parameters.
+
+Lastly, despite not having to manually tune the learning rate there is one huge disadvantage i.e due to monotonically decreasing learning rates, at some point in time step, the model will stop learning as the learning rate is almost close to 0.
 
 AdaGrad is designed to specifically explore the idea of automatically tailoring the step size for each dimension in the search space.
 
@@ -591,10 +661,22 @@ This choice of numerator was to ensure that both parts of the calculation have t
 
 After independently deriving the RMSProp update, the authors noticed that the units in the update equations for gradient descent, momentum and Adagrad do not match. To fix this, they use an exponentially decaying average of the square updates
 
-Adadelta is an extension of Adagrad that seeks to reduce its aggressive, monotonically decreasing learning rate. Instead of accumulating all past squared gradients, Adadelta restricts the window of accumulated past gradients to some fixed size
+Adadelta is an extension of Adagrad that seeks to reduce its aggressive, monotonically decreasing learning rate. Instead of accumulating all past squared gradients, Adadelta restricts the window of accumulated past gradients to some fixed size. The idea behind Adadelta is that instead of summing up all the past squared gradients from 1 to “t” time steps, what if we could restrict the window size. For example, computing the squared gradient of the past 10 gradients and average out. This can be achieved using Exponentially Weighted Averages over Gradient.
+
+![image](https://user-images.githubusercontent.com/99672298/186225170-04c034db-2cd4-4a51-af32-e0050e2d077c.png)
+
+The above equation shows that as the time steps “t” increase the summation of squared gradients “α” increases which led to a decrease in learning rate “η”. In order to resolve the exponential increase in the summation of squared gradients “α”, we replaced the “α” with exponentially weighted averages of squared gradients.
+
+![image](https://user-images.githubusercontent.com/99672298/186225246-9e4dff86-841d-4043-98b8-61b080ae387d.png)
+
+So, here unlike the alpha “α” in Adagrad, where it increases exponentially after every time step. In Adadelda, using the exponentially weighted averages over the past Gradient, an increase in “Sdw” is under control. The calculation for “Sdw” is similar to the example I did in the Exponentially Weighted Averages section.
+
+The typical “β” value is 0.9 or 0.95.
 
 ### Adaptive Movement Estimation (ADAM)
 ___
+
+Adam optimizer is by far one of the most preferred optimizers. The idea behind Adam optimizer is to utilize the momentum concept from “SGD with momentum” and adaptive learning rate from “Ada delta”.
 
 The Adaptive Movement Estimation or ADAM for short is an extension to gradient and a natural successor to technique like Adagrad and RMSProp that automatically adapts a learning rate for each input varibale for the objective function and further smoothens the search process by using an exponentially decreasing moving average of the gradient.
 
@@ -607,6 +689,21 @@ The two combined advantages come from
 1.) Adaptive Gradient Algorithm (AdaGrad) that maintains a per-parameter learning rate that improves performance on problems with sparse gradients (e.g. natural language and computer vision problems).
 
 2.) Root Mean Square Propagation (RMSProp) that also maintains per-parameter learning rates that are adapted based on the average of recent magnitudes of the gradients for the weight (e.g. how quickly it is changing). This means the algorithm does well on online and non-stationary problems (e.g. noisy).
+
+also
+
+**`Exponential Weighted Averages for past gradients`**
+
+![image](https://user-images.githubusercontent.com/99672298/186225708-789e9b1e-bc24-469a-8fab-7ff0bcf79868.png)
+
+**`Exponential Weighted Averages for past squared gradients`**
+
+![image](https://user-images.githubusercontent.com/99672298/186225758-3d4ecd2c-44b6-4500-a587-4a8684abbb99.png)
+
+Using the above equation, now the weight and bias updation formula looks like:
+
+![image](https://user-images.githubusercontent.com/99672298/186225808-50c853f8-84a6-4d71-8a63-4bdf842fc5a9.png)
+
 
 Adam bears the fruits from both world AdaGrad and RMSProp. In addition to storing an exponentially decaying average of past squared gradients, Adam also keeps an exponentially decaying average of past gradients similar to momentum.
 
@@ -629,6 +726,8 @@ ADAM is an extension of gradient descent that adds a first and second moment of 
 
 ![image](https://user-images.githubusercontent.com/99672298/181702773-71ff0115-0df7-4892-a800-c8c974d7642c.png)
 ![28 06 2022_16 38 22_REC](https://user-images.githubusercontent.com/99672298/186171175-dbbad1c0-788b-4183-ae74-bf8868b48c93.png)
+
+There is something called bias correction while using Exponential Weighted Averages. Bias correction is used to get a better estimate in the initial time steps. But often most people don’t bother to implement bias correction because most people would rather wait for an initial period and then after some time steps the bias error will become insignificant.
 
 [Table of Content](#0.1)
 
