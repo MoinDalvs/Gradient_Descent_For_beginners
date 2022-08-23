@@ -628,6 +628,7 @@ Nesterov-accelerated Adaptive Moment Estimation, or the Nadam, is an extension o
 ADAM is an extension of gradient descent that adds a first and second moment of the gradient and automatically adapts a learning rate for each parameter that is being optimized. NAG is an extension to momentum where the update is performed using the gradient of the projected update to the parameter rather than the actual current variable value. This has the effect of slowing down the search when the optima is located rather than overshooting, in some situations.
 
 ![image](https://user-images.githubusercontent.com/99672298/181702773-71ff0115-0df7-4892-a800-c8c974d7642c.png)
+![28 06 2022_16 38 22_REC](https://user-images.githubusercontent.com/99672298/186171175-dbbad1c0-788b-4183-ae74-bf8868b48c93.png)
 
 [Table of Content](#0.1)
 
