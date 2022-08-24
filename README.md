@@ -11,14 +11,15 @@
 2. [Gradient Descent](#2)
     - 2.1 [What is Gradient Descent?](#2.1)
     - 2.2 [The Cost function](#2.2)
-    - - 2.2 A) [The Difference between Loss and Cost Function](#2.2A)
-    - 2.3 [Linear Regression using Gradient Descent](#2.3)
-    - 2.4 [Initialization](#2.4)
-    - 2.5 [Direction and learning Rate](#2.5)
-    - 2.6 [Challenges with Gradient Descent](#2.6)
-    - 2.7 [Types of Gradient Descent](#2.7)
-    - 2.8 [Variants of Gradient Descent Algorithm](#2.8)
-    - 2.9 [Overview](#2.9)
+    - 2.3 [All Loss Functions](#2.3)
+    - - 2.3 A) [The Difference between Loss and Cost Function](#2.3A)
+    - 2.4 [Linear Regression using Gradient Descent](#2.4)
+    - 2.5 [Initialization](#2.5)
+    - 2.6 [Direction and learning Rate](#2.6)
+    - 2.7 [Challenges with Gradient Descent](#2.7)
+    - 2.8 [Types of Gradient Descent](#2.8)
+    - 2.9 [Variants of Gradient Descent Algorithm](#2.9)
+3. [Overview](#3)
 
 ## 1. Let's talk about Differential Derivative and Partial Derivative<a class="anchor" id="1"></a>
 + To better understand the difference between the differential and derivative of a function. You need to understand the concept of a function.
@@ -105,6 +106,8 @@ The slight difference between the loss fucntion and the cost function is about t
 
 + Gradient descent is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function.Gradient descent is an optimization algorithm used to optimize neural networks and many other machine learning algorithms. Our main goal in optimization is to find the local minima, and gradient descent helps us to take repeated steps in the direction opposite of the gradient of the function at the current point. This method is commonly used in machine learning (ML) and deep learning (DL) to minimize a cost/loss function
 
+### 2.3 The Cost function<a class="anchor" id="2.3"></a>
+___
 + **`Mean Squared Error`**
 + The Mean Squared Error (MSE) is perhaps the simplest and most common loss function, often taught in introductory Machine Learning courses. To calculate the MSE, you take the difference between your model’s predictions and the ground truth, square it, and average it out across the whole dataset.
 
@@ -335,7 +338,7 @@ If you are dealing with a multi-class classification problem you can calculate t
 ![18 08 2022_11 18 57_REC](https://user-images.githubusercontent.com/99672298/186230590-6a9f100b-41c1-47ac-a1df-a27e551226fe.png)
 ![18 08 2022_11 20 51_REC](https://user-images.githubusercontent.com/99672298/186230630-14021cdd-f7ff-4a72-8de4-dc020a9ff350.png)
 
-#### 2.2 A) The difference between the Loss Function and the Cost Function<a class="anchor" id="2.2A"></a>
+#### 2.3 A) The difference between the Loss Function and the Cost Function<a class="anchor" id="2.3A"></a>
 
 ![17 08 2022_15 54 58_REC](https://user-images.githubusercontent.com/99672298/186229903-293fe2e5-34c4-430a-b24a-5ba8bc63f3c2.png)
 
@@ -378,7 +381,7 @@ The cost functions serve two purposes. First, its value for the test data estima
 
 ![Filter_Method](https://editor.analyticsvidhya.com/uploads/25665ezgif.com-gif-maker.gif)
 
-### 2.3 Linear Regression using Gradient Descent<a class="anchor" id="2.3"></a>
+### 2.4 Linear Regression using Gradient Descent<a class="anchor" id="2.4"></a>
 ___
 
 ![Filter Method](https://miro.medium.com/max/1400/1*CjTBNFUEI_IokEOXJ00zKw.gif)
@@ -430,14 +433,14 @@ Dₘ is the value of the partial derivative with respect to m. Similarly lets fi
 
 [Table of Content](#0.1)
 
-### 2.4 Initialization<a class="anchor" id="2.4"></a>
+### 2.5 Initialization<a class="anchor" id="2.5"></a>
 ___
  The Starting point is a randomly selected value of slope and intercept (m & c). It is used as a starting point, to derive the first derivative or slope and then uses the tangent line to calculate the steepness of the slope. Further, this slope will inform the update to the parameters. The slope becomees steeper at eht starting point, but whenever new paramters are generated, then the steepness gradually reduces, the closer we get to the optimal value, the closer the slope of the curve gets to zero. This means that wehtn the slope of the cruve is close to zero, which is claled as that we are near to the point of convergence.
 
 ![02 07 2022_11 29 16_REC](https://user-images.githubusercontent.com/99672298/181737076-62bdea0e-c817-4f1d-abbb-823adc48b56e.png)
 ![28 06 2022_15 21 14_REC](https://user-images.githubusercontent.com/99672298/181740063-af623d4e-ac3e-4ece-a460-e6db9e906899.png)
 
-### 2.5 Direction and learning Rate<a class="anchor" id="2.5"></a>
+### 2.6 Direction and learning Rate<a class="anchor" id="2.6"></a>
 ___
 
 These two factors are used to determine the partial derivative calculation of future iteration and allow it to the point of convergence or glabal minima.
@@ -500,7 +503,7 @@ ___
 
 [Table of Content](#0.1)
 
-### 2.6 Challenges with Gradient Descent<a class="anchor" id="2.6"></a>
+### 2.7 Challenges with Gradient Descent<a class="anchor" id="2.7"></a>
 ___
 Gradient Descent works fine in most of the cases, but there are many cases where gradient descent doesn't work properly or fails to work altogether
 
@@ -562,7 +565,7 @@ Exploding gradient is just opposite to the vanishing gradient as it occurs when 
 
 ![26 07 2022_16 09 30_REC](https://user-images.githubusercontent.com/99672298/181470534-006f49ed-3ce4-4e1f-a76c-fe5599a75ad9.png)
 
-### 2.7 Types of Gradient Descent<a class="anchor" id="2.7"></a>
+### 2.8 Types of Gradient Descent<a class="anchor" id="2.8"></a>
 ___
 Based on the error in various training models, the Gradient Descent learning algorithm can be divided into Batch gradient descent, stochastic gradient descent, and mini-batch gradient descent. Let's understand these different types of gradient descent:
 
@@ -648,7 +651,7 @@ The above figure is the plot between the number of epoch on the x-axis and the l
 
 [Table of Content](#0.1)
 
-### 2.8 Variants of Gradient Descent Algorithm<a class="anchor" id="2.8"></a>
+### 2.9 Variants of Gradient Descent Algorithm<a class="anchor" id="2.9"></a>
 ___
 
 #### **Vanilla Gradient Descent**
@@ -963,7 +966,7 @@ There is something called bias correction while using Exponential Weighted Avera
 
 [Table of Content](#0.1)
 
-### 2.9 Overview:<a class="anchor" id="2.9"></a>
+### 3 Overview:<a class="anchor" id="3"></a>
 ___
 Gradient descent refers to a minimization optimization algorithm that follows the negative of the gradient downhill of the target function to locate the minimum of the function.
 
