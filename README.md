@@ -335,10 +335,46 @@ If you are dealing with a multi-class classification problem you can calculate t
 
 ![17 08 2022_21 57 18_REC](https://user-images.githubusercontent.com/99672298/186230519-5af07bb8-34f5-4fa7-96d5-ee1b06f10010.png)
 ![18 08 2022_10 52 46_REC](https://user-images.githubusercontent.com/99672298/186230575-85ec562c-fb9d-4ad7-9197-567d6725c39f.png)
+
++ **Categorical crossentropy**
+Categorical crossentropy is a loss function that is used in multi-class classification tasks. These are tasks where an example can only belong to one out of many possible categories, and the model must decide which one.
+Formally, it is designed to quantify the difference between two probability distributions.
+
+![image](https://user-images.githubusercontent.com/99672298/186352375-108d18e5-f56f-40e6-9a0b-60055f56338a.png)
+
+Categorical crossentropy math
+The categorical crossentropy loss function calculates the loss of an example by computing the following sum:
+
+![image](https://user-images.githubusercontent.com/99672298/186351930-f71cfbf5-b14c-4ef5-92d1-7fd03703043e.png)
+
+Sigmoid
+It squashes a vector in the range (0, 1). It is applied independently to each element of $s$ $s_i$. It’s also called **logistic function.**
+
+![image](https://user-images.githubusercontent.com/99672298/186352719-e67d98a6-c6e7-4ef1-a055-ab1ab3471142.png)
+![image](https://user-images.githubusercontent.com/99672298/186352760-e5bc95a9-f8ed-4155-9edf-c57296b911f3.png)
+
+Softmax
+Softmax it’s a function, not a loss. It squashes a vector in the range (0, 1) and all the resulting elements add up to 1. It is applied to the output scores $s$. As elements represent a class, they can be interpreted as class probabilities.
+The Softmax function cannot be applied independently to each $s_i$, since it depends on all elements of $s$. For a given class $s_i$, the Softmax function can be computed as:
+
+![image](https://user-images.githubusercontent.com/99672298/186352988-8f64c8c9-df08-4cf5-811c-ce8000cd1175.png)
+
+
 ![18 08 2022_11 18 57_REC](https://user-images.githubusercontent.com/99672298/186230590-6a9f100b-41c1-47ac-a1df-a27e551226fe.png)
 ![18 08 2022_11 20 51_REC](https://user-images.githubusercontent.com/99672298/186230630-14021cdd-f7ff-4a72-8de4-dc020a9ff350.png)
 
 #### 2.3 A) The difference between the Loss Function and the Cost Function<a class="anchor" id="2.3A"></a>
+
+Loss function vs Cost function
+Most people confuse loss function and cost function. let’s understand what is loss function and cost function. Cost function and Loss function are synonymous and used interchangeably but they are different.
+
+Loss Function:
+
+A loss function/error function is for a single training example/input.
+
+Cost Function:
+
+A cost function, on the other hand, is the average loss over the entire training dataset.
 
 ![17 08 2022_15 54 58_REC](https://user-images.githubusercontent.com/99672298/186229903-293fe2e5-34c4-430a-b24a-5ba8bc63f3c2.png)
 
