@@ -106,7 +106,7 @@ The slight difference between the loss fucntion and the cost function is about t
 
 + Gradient descent is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function.Gradient descent is an optimization algorithm used to optimize neural networks and many other machine learning algorithms. Our main goal in optimization is to find the local minima, and gradient descent helps us to take repeated steps in the direction opposite of the gradient of the function at the current point. This method is commonly used in machine learning (ML) and deep learning (DL) to minimize a cost/loss function
 
-### 2.3 The Cost function<a class="anchor" id="2.3"></a>
+### 2.3 All Loss functions<a class="anchor" id="2.3"></a>
 ___
 + **`Mean Squared Error`**
 + The Mean Squared Error (MSE) is perhaps the simplest and most common loss function, often taught in introductory Machine Learning courses. To calculate the MSE, you take the difference between your model’s predictions and the ground truth, square it, and average it out across the whole dataset.
