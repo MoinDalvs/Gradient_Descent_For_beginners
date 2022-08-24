@@ -118,6 +118,8 @@ Where N is the number of samples we are testing against.
 
 ![17 08 2022_19 31 44_REC](https://user-images.githubusercontent.com/99672298/186230025-9aa1e21c-e2b3-466a-ad6d-b4e27f68cb35.png)
 
+![17 08 2022_19 27 56_REC](https://user-images.githubusercontent.com/99672298/186229944-393a5f83-f42b-43de-9617-9d81ca4d2857.png)
+
 Advantage: The MSE is great for ensuring that our trained model has no outlier predictions with huge errors, since the MSE puts larger weight on theses errors due to the squaring part of the function.
 
 Disadvantage: If our model makes a single very bad prediction, the squaring part of the function magnifies the error. Yet in many practical cases we don’t care much about these outliers and are aiming for more of a well-rounded model that performs good enough on the majority.
@@ -161,10 +163,170 @@ This has the effect of magnifying the loss values as long as they are greater th
 
 ![17 08 2022_21 42 39_REC](https://user-images.githubusercontent.com/99672298/186230181-f7267037-7561-48c6-83f6-4234c9da9470.png)
 
-
 + **`Cross Entropy`**
 
 ![17 08 2022_21 51 22_REC](https://user-images.githubusercontent.com/99672298/186230361-09ceb50b-7032-4af3-9338-bd51e98f27e4.png)
+
+If you are training a binary classifier, chances are you are using binary cross-entropy / log loss as your loss function.
+
+A Simple Classification Problem
+Let’s start with 10 random points:
+
+x = [-2.2, -1.4, -0.8, 0.2, 0.4, 0.8, 1.2, 2.2, 2.9, 4.6]
+
+This is our only feature: x.
+
+![image](https://user-images.githubusercontent.com/99672298/186340993-dc40bded-8290-454b-aa10-d3e9d398b2ab.png)
+
+Now, let’s assign some colors to our points: red and green. These are our labels
+
+![image](https://user-images.githubusercontent.com/99672298/186341040-92621a17-6b98-4be8-9be4-23c2a2b5558a.png)
+
+So, our classification problem is quite straightforward: given our feature x, we need to predict its label: red or green.
+
+Since this is a binary classification, we can also pose this problem as: “is the point green” or, even better, “what is the probability of the point being green”? Ideally, green points would have a probability of 1.0 (of being green), while red points would have a probability of 0.0 (of being green).
+
+In this setting, green points belong to the positive class (YES, they are green), while red points belong to the negative class (NO, they are not green).
+
+If we fit a model to perform this classification, it will predict a probability of being green to each one of our points. Given what we know about the color of the points, how can we evaluate how good (or bad) are the predicted probabilities? This is the whole purpose of the loss function! It should return high values for bad predictions and low values for good predictions.
+
+For a binary classification like our example, the typical loss function is the binary cross-entropy / log loss.
+
++ **Loss Function: Binary Cross-Entropy / Log Loss**
+
+If you look this loss function up, this is what you’ll find:
+
+![image](https://user-images.githubusercontent.com/99672298/186341521-0fe42e12-7309-4f8c-88af-c70b26a46bef.png)
+
+where y is the label (1 for green points and 0 for red points) and p(y) is the predicted probability of the point being green for all N points.
+
+Reading this formula, it tells you that, for each green point (y=1), it adds log(p(y)) to the loss, that is, the log probability of it being green. Conversely, it adds log(1-p(y)), that is, the log probability of it being red, for each red point (y=0). Not necessarily difficult, sure, but no so intuitive too…
+
+But, before going into more formulas, let me show you a visual representation of the formula above…
+
+Computing the Loss — the visual way
+First, let’s split the points according to their classes, positive or negative, like the figure below:
+
+![image](https://user-images.githubusercontent.com/99672298/186342684-4b990292-e652-482d-aaff-bb8e6b220310.png)
+
+Now, let’s train a Logistic Regression to classify our points. The fitted regression is a sigmoid curve representing the probability of a point being green for any given x . It looks like this:
+
+![image](https://user-images.githubusercontent.com/99672298/186342708-920ac9a1-1969-4bc2-a97b-22ed8db5e34d.png)
+
+Then, for all points belonging to the positive class (green), what are the predicted probabilities given by our classifier? These are the green bars under the sigmoid curve, at the x coordinates corresponding to the points.
+
+![image](https://user-images.githubusercontent.com/99672298/186342733-4995cec9-0903-4c21-8225-232f3262917d.png)
+
+OK, so far, so good! What about the points in the negative class? Remember, the green bars under the sigmoid curve represent the probability of a given point being green. So, what is the probability of a given point being red? The red bars ABOVE the sigmoid curve, of course :-)
+
+![image](https://user-images.githubusercontent.com/99672298/186342774-f55afca5-e094-4fa3-bbc4-fa43d85cdbb7.png)
+
+Putting it all together, we end up with something like this:
+
+![image](https://user-images.githubusercontent.com/99672298/186342812-c5549022-ae7c-40b0-9fe0-d4561e4f0b49.png)
+
+The bars represent the predicted probabilities associated with the corresponding true class of each point!
+
+OK, we have the predicted probabilities… time to evaluate them by computing the binary cross-entropy / log loss!
+
+These probabilities are all we need, so, let’s get rid of the x axis and bring the bars next to each other:
+
+![image](https://user-images.githubusercontent.com/99672298/186342852-053bb37a-602e-4b85-a9c7-a1c4360f46a6.png)
+
+Well, the hanging bars don’t make much sense anymore, so let’s reposition them:
+
+![image](https://user-images.githubusercontent.com/99672298/186342909-c51d7c4a-1720-4720-9822-775caafd5826.png)
+
+Since we’re trying to compute a loss, we need to penalize bad predictions, right? If the probability associated with the true class is 1.0, we need its loss to be zero. Conversely, if that probability is low, say, 0.01, we need its loss to be HUGE!
+
+It turns out, taking the (negative) log of the probability suits us well enough for this purpose (since the log of values between 0.0 and 1.0 is negative, we take the negative log to obtain a positive value for the loss).
+
+The plot below gives us a clear picture —as the predicted probability of the true class gets closer to zero, the loss increases exponentially:
+
+![image](https://user-images.githubusercontent.com/99672298/186342975-83dc301a-1cee-4620-9795-69cebc36179d.png)
+
+Fair enough! Let’s take the (negative) log of the probabilities — these are the corresponding losses of each and every point.
+
+Finally, we compute the mean of all these losses.
+
+![image](https://user-images.githubusercontent.com/99672298/186342998-4f783796-0fba-4531-baca-67c1b0b78108.png)
+
+Voilà! We have successfully computed the binary cross-entropy / log loss of this toy example. It is 0.3329!
+
++ **Distribution**
+
+Let’s start with the distribution of our points. Since y represents the classes of our points (we have 3 red points and 7 green points), this is what its distribution, let’s call it q(y), looks like:
+
+![image](https://user-images.githubusercontent.com/99672298/186344163-15e8c7db-c40a-42b0-b869-1916096e531e.png)
+
++ **Entropy**
+
+`Entropy is a measure of the uncertainty associated with a given distribution q(y).`
+
+What if all our points were green? What would be the uncertainty of that distribution? ZERO, right? After all, there would be no doubt about the color of a point: it is always green! So, entropy is zero!
+
+On the other hand, what if we knew exactly half of the points were green and the other half, red? That’s the worst case scenario, right? We would have absolutely no edge on guessing the color of a point: it is totally random! For that case, entropy is given by the formula below (we have two classes (colors)— red or green — hence, 
+
+![image](https://user-images.githubusercontent.com/99672298/186344236-f42698c6-c8ac-4618-8fe0-56e3f43fa922.png)
+
+For every other case in between, we can compute the entropy of a distribution, like our q(y), using the formula below, where C is the number of classes:
+
+![image](https://user-images.githubusercontent.com/99672298/186344265-28164ce4-2a3d-4a76-b420-886e2d347339.png)
+
+So, if we know the true distribution of a random variable, we can compute its entropy. But, if that’s the case, why bother training a classifier in the first place? After all, we KNOW the true distribution…
+
+But, what if we DON’T? Can we try to approximate the true distribution with some other distribution, say, p(y)? Sure we can! :-)
+
++ **Cross-Entropy**
+
+Let’s assume our points follow this other distribution p(y). But we know they are actually coming from the true (unknown) distribution q(y), right?
+
+If we compute entropy like this, we are actually computing the cross-entropy between both distributions:
+
+![image](https://user-images.githubusercontent.com/99672298/186344308-da1764b0-dc2a-4bfe-a5e7-a05fe22d33bc.png)
+
+If we, somewhat miraculously, match p(y) to q(y) perfectly, the computed values for both cross-entropy and entropy will match as well.
+
+Since this is likely never happening, cross-entropy will have a BIGGER value than the entropy computed on the true distribution.
+
+![image](https://user-images.githubusercontent.com/99672298/186344349-88f7a7f9-3d40-48b8-9ccb-ab299259d0af.png)
+
+It turns out, this difference between cross-entropy and entropy has a name…
+
++ **Kullback-Leibler Divergence**
+
+The Kullback-Leibler Divergence,or “KL Divergence” for short, is a measure of dissimilarity between two distributions:
+
+![image](https://user-images.githubusercontent.com/99672298/186344413-2ffb75ec-fa5a-405d-a129-268074671d98.png)
+
+This means that, the closer p(y) gets to q(y), the lower the divergence and, consequently, the cross-entropy, will be.
+
+So, we need to find a good p(y) to use… but, this is what our classifier should do, isn’t it?! And indeed it does! It looks for the best possible p(y), which is the one that minimizes the cross-entropy.
+
++ **Loss Function** 
+
+During its training, the classifier uses each of the N points in its training set to compute the cross-entropy loss, effectively fitting the distribution p(y)! Since the probability of each point is 1/N, cross-entropy is given by:
+
+![image](https://user-images.githubusercontent.com/99672298/186344500-67759c7a-a289-48da-bacf-7934ad8710e3.png)
+
+Remember Figures 6 to 10 above? We need to compute the cross-entropy on top of the probabilities associated with the true class of each point. It means using the green bars for the points in the positive class (y=1) and the red hanging bars for the points in the negative class (y=0) or, mathematically speaking:
+
+![image](https://user-images.githubusercontent.com/99672298/186344528-30098ee8-df79-46ad-8afd-d037ec25d1a5.png)
+
+The final step is to compute the average of all points in both classes, positive and negative:
+
+![image](https://user-images.githubusercontent.com/99672298/186344578-59c3aed2-d99a-4725-9d45-dcd64069fef3.png)
+
+Finally, with a little bit of manipulation, we can take any point, either from the positive or negative classes, under the same formula:
+
+![image](https://user-images.githubusercontent.com/99672298/186344607-f2ced279-d912-4e35-a2a9-3a85778f9ea3.png)
+
+Voilà! We got back to the original formula for binary cross-entropy / log loss :-)
+
+Binary Cross Entropy for Multi-Class classification
+If you are dealing with a multi-class classification problem you can calculate the Log loss in the same way. Just use the formula given below.
+
+![image](https://user-images.githubusercontent.com/99672298/186344912-feabc467-d5ad-47de-9900-26223b30d661.png)
 
 + **`Multi-Class Cross Entropy`**
 
@@ -215,9 +377,6 @@ But, nothing stops us from using the median, the summary statistic less sensitiv
 The cost functions serve two purposes. First, its value for the test data estimates our model’s performance on unseen objects. That allows us to compare different models and choose the best. Second, we use it to train our models.
 
 ![Filter_Method](https://editor.analyticsvidhya.com/uploads/25665ezgif.com-gif-maker.gif)
-
-![17 08 2022_19 27 56_REC](https://user-images.githubusercontent.com/99672298/186229944-393a5f83-f42b-43de-9617-9d81ca4d2857.png)
-
 
 ### 2.3 Linear Regression using Gradient Descent<a class="anchor" id="2.3"></a>
 ___
